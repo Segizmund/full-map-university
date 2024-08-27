@@ -523,7 +523,6 @@
             if (mutation.attributeName === 'camera-orbit') {
                 // Значение атрибута `camera-orbit` изменилось
                 const newOrbit = mutation.target.getAttribute('camera-orbit');
-                console.log("Новый camera-orbit:", newOrbit);
             }
         });
     });
@@ -543,14 +542,13 @@
         isRotating = false;
     }
     modelViewerColor.addEventListener('load', () => {
-        const buttons = document.querySelectorAll('model-viewer.uppermap button');
+        const buttons = document.querySelectorAll('model-viewer.uppermap button.Hotspot');
         const crosses = document.querySelectorAll('.card .close');
-        document.querySelector('.reset-map').addEventListener('click',(e) =>{
-           console.log(e);
-        });
         buttons.forEach(button => {
             button.addEventListener('click', (event) => {
-                    let descrip = document.querySelectorAll('model-viewer.uppermap button');
+                    let descrip = document.querySelectorAll('model-viewer.uppermap button.Hotspot');
+                    let selectBtn = document.querySelector('.select-korp');
+                    let resetBtn = document.querySelector('.reset-map');
                     let cards = document.querySelectorAll('.card');
                     const defaulColor = '#E7E7E7';
                     const colorString = '#820000';
@@ -569,6 +567,7 @@
                         cards.forEach(card => {
                            if(numberCorp == card.dataset.number) {
                                card.style.display ='flex';
+                               resetBtn.style.display = 'block';
                            }
                            else{
                                card.style.display = 'none';
@@ -601,8 +600,8 @@
 
                 crosses.forEach(event =>{
                     event.addEventListener('click', (e) => {
+                        selectBtn.style.display = 'flex';
                         stopRotation()
-                        console.log(currentRotation);
                         modelViewerColor.setAttribute('camera-orbit', `${currentRotationDeg}deg 65deg 2897m`);
                         modelViewerColor.setAttribute('field-of-view', '50deg');
                         modelViewerColor.setAttribute('camera-target', button.dataset.position);
@@ -620,7 +619,7 @@
                     });
                 });
 
-                    if (button.closest('model-viewer.uppermap button') != null){
+                    if (button.closest('model-viewer.uppermap button.Hotspot') != null){
                         isRotating = true;
                         rotateModel();
                         descrip.forEach((e)=>{
@@ -636,6 +635,27 @@
 
                             event.stopPropagation();
                         }
+                    });
+                    document.querySelector('.reset-map').addEventListener('click',(e) =>{
+                        stopRotation()
+                        rotationAngle = 0;
+                        currentRotation = 0;
+                        currentRotationDeg = 0;
+                        console.log(currentRotation);
+                        modelViewerColor.setAttribute('camera-orbit', `90deg 65deg 2897m`);
+                        modelViewerColor.setAttribute('field-of-view', '50deg');
+                        modelViewerColor.setAttribute('camera-target', defaultTarget);
+                        modelViewerColor.setAttribute('camera-controls',"");
+                        model.materials.slice(2).forEach((num, index) => {
+                            const material = model.materials[2 + index];
+                            material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
+                        });
+                        descrip.forEach((e)=>{
+                            e.style.display = 'block';
+                        });
+                        cards.forEach(card => {
+                            card.style.display = 'none';
+                        });
                     });
 
 // Получение объекта модели
