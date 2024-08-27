@@ -132,6 +132,35 @@
     .HotspotAnnotation h3{
         border-bottom: 1px solid black;
     }
+    .select-korp{
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        display: flex;
+        opacity: 0.9;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+    }
+    .select-korp select{
+        width: 200px;
+        opacity: 0.9 !important;
+        border-radius: .375rem !important;
+    }
+    .reset-map{
+        background-color: #820000;
+        color: #FFFFFF;
+        border: 1px solid #820000;
+        border-radius: .375rem;
+        text-align: center;
+        padding: .375rem .75rem;
+        margin-left: 10px;
+        transition: .3s linear;
+    }
+    .reset-map:hover{
+        background-color: #FFFFFF;
+        color: #820000;
+    }
     .no-context{
         -webkit-touch-callout: none; /* Safari */
         -webkit-user-select: none; /* Safari */
@@ -467,6 +496,19 @@
             <a href="#">Подробнее<i class="bi bi-arrow-right-circle-fill" style="color: #820000;"></i></a>
         </div>
     </div>
+    <div class="select-korp">
+        <select class="form-select" aria-label="Default select">
+            <option selected="">Выбирите корпус</option>
+            <option value="1">Главный корпус МелГУ</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
+        <div>
+            <button class="reset-map">
+                Сбросить
+            </button>
+        </div>
+    </div>
 </model-viewer>
 <script>
     const modelViewerColor = document.querySelector("model-viewer.uppermap");
@@ -503,6 +545,9 @@
     modelViewerColor.addEventListener('load', () => {
         const buttons = document.querySelectorAll('model-viewer.uppermap button');
         const crosses = document.querySelectorAll('.card .close');
+        document.querySelector('.reset-map').addEventListener('click',(e) =>{
+           console.log(e);
+        });
         buttons.forEach(button => {
             button.addEventListener('click', (event) => {
                     let descrip = document.querySelectorAll('model-viewer.uppermap button');
