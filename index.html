@@ -161,6 +161,22 @@
         background-color: #FFFFFF;
         color: #820000;
     }
+    .prvBtn{
+        margin-right: 10px;
+    }
+    .nxtBtn{
+        margin-left: 10px;
+    }
+    .prvBtn,.nxtBtn{
+        font-size: 35px;
+        color: #820000;
+        transition: .3s linear;
+        cursor: pointer;
+
+    }
+    .prvBtn:hover,.nxtBtn:hover{
+        color: rgb(104, 3, 3);
+    }
     .no-context{
         -webkit-touch-callout: none; /* Safari */
         -webkit-user-select: none; /* Safari */
@@ -497,17 +513,37 @@
         </div>
     </div>
     <div class="select-korp">
+        <a class="prvBtn"><i class="bi bi-arrow-left-circle-fill"></i></a>
         <select class="form-select" aria-label="Default select">
-            <option selected="">Выбирите корпус</option>
-            <option value="1">Главный корпус МелГУ</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+            <option value="0" selected="">Выбирите корпус</option>
+            <option value="1">Учебный корпус №1</option>
+            <option value="2">Учебный корпус №2</option>
+            <option value="3">Учебный корпус №3</option>
+            <option value="4">Учебный корпус №4</option>
+            <option value="5">Учебный корпус №5</option>
+            <option value="6">Учебный корпус №6</option>
+            <option value="7">Учебный корпус №7</option>
+            <option value="8">Учебный корпус №8</option>
+            <option value="9">Учебный корпус №9</option>
+            <option value="10">Учебный корпус №10</option>
+            <option value="10">Учебный корпус №10</option>
+            <option value="11">Учебный корпус №11</option>
+            <option value="12">Учебный корпус №12</option>
+            <option value="13">Учебный корпус №13</option>
+            <option value="15">Учебный корпус №15</option>
+            <option value="17">Учебный корпус №17</option>
+            <option value="18">Учебный корпус №18</option>
+            <option value="19">Библиотека (верхняя)</option>
+            <option value="20">Библиотека (нижняя)</option>
+            <option value="21">ЦКИД</option>
+            <option value="22">Столовая</option>
         </select>
         <div>
             <button class="reset-map">
                 Сбросить
             </button>
         </div>
+        <a class="nxtBtn"><i class="bi bi-arrow-right-circle-fill"></i></a>
     </div>
 </model-viewer>
 <script>
