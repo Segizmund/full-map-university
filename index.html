@@ -671,6 +671,8 @@
     const modelViewerColor = document.querySelector("model-viewer.uppermap");
     let rotationAngle = 0;
     let isRotating = true;
+    let animation;
+    const speed = 0.002;
     let currentRotation = 0;
     let currentRotationDeg = 0;
     let isModelClickable = true;
@@ -686,11 +688,16 @@
 
     // Начинаем наблюдение за изменениями в `model-viewer`
     observer.observe(modelViewerColor, { attributes: true, attributeFilter: ['camera-orbit'] });
+    function resetRotation() {
+        rotationAngle = 0;
+        currentRotation = 0;
+        currentRotationDeg = 0;
+    }
     function rotateModel() {
         if (isRotating) { // Проверяем, включена ли вращение
-            rotationAngle += 0.002; // Изменяйте значение для регулировки скорости вращения
+            rotationAngle += speed; // Изменяйте значение для регулировки скорости вращения
             modelViewerColor.cameraOrbit = `${rotationAngle}rad 0 0`;
-            requestAnimationFrame(rotateModel);
+            animation = requestAnimationFrame(rotateModel);
             currentRotation = rotationAngle;
             currentRotationDeg = (currentRotation * 180) / Math.PI;
         }
@@ -715,13 +722,11 @@
             // Добавляем значение атрибута value в массив
             values.push(option.value);
         }
-        console.log(values); // Выводим массив значений в консоль
 
         // Получаем начальное значение выбранного элемента
         let selectedValue = selectElement.value;
 
         // Выводим начальное значение в консоль
-        console.log("Начальное значение:", selectedValue);
 
 
         const buttons = document.querySelectorAll('model-viewer.uppermap button.Hotspot');
@@ -733,6 +738,29 @@
         const defaulColor = '#E7E7E7';
         const colorString = '#820000';
         const model = modelViewerColor.model;
+
+        function resetMap(){
+            stopRotation();
+            rotationAngle = 0;
+            currentRotation = 0;
+            currentRotationDeg = 0;
+            selectElement.value = 0;
+            modelViewerColor.setAttribute('camera-orbit', `90deg 65deg 2897m`);
+            modelViewerColor.setAttribute('field-of-view', '50deg');
+            modelViewerColor.setAttribute('camera-target', defaultTarget);
+            modelViewerColor.setAttribute('camera-controls',"");
+            model.materials.slice(2).forEach((num, index) => {
+                const material = model.materials[2 + index];
+                material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
+            });
+            descrip.forEach((e)=>{
+                e.style.display = 'block';
+            });
+            cards.forEach(card => {
+                card.style.display = 'none';
+            });
+        }
+
         buttons.forEach(button => {
             button.addEventListener('click', (event) => {
 
@@ -788,7 +816,7 @@
                     event.addEventListener('click', (e) => {
                         selectElement.value = 0;
                         selectBtn.style.display = 'flex';
-                        stopRotation()
+                        stopRotation();
                         modelViewerColor.setAttribute('camera-orbit', `${currentRotationDeg}deg 65deg 2897m`);
                         modelViewerColor.setAttribute('field-of-view', '50deg');
                         modelViewerColor.setAttribute('camera-target', button.dataset.position);
@@ -826,9 +854,6 @@
                 });
         });
         function changeSelected(direction) {
-            rotationAngle = 0;
-            stopRotation();
-
             const currentIndex = options.indexOf(selectElement.selectedOptions[0]);
             selectedIndex = (currentIndex + direction + options.length) % options.length;
             if (selectedIndex === 0 && direction === -1) {
@@ -844,18 +869,16 @@
             // Устанавливаем новое выбранное значение
             selectElement.selectedIndex = selectedIndex;
             selectedValue = options[selectedIndex].value;
-            console.log(selectedIndex);
+            resetRotation();
             changeSelect();
         }
        function changeSelect() {
-            stopRotation();
+           cancelAnimationFrame(animation);
             selectedValue = selectElement.value;
-            console.log(selectedValue);
             buttons.forEach(button =>{
                 if(selectedValue == button.dataset.number){
                     numberCorp = button.dataset.number;
                     targetCoords = button.dataset.position;
-                    console.log(numberCorp);
                 }
             });
             model.materials.slice(2).forEach((num, index) => {
@@ -912,7 +935,6 @@
                     model.materials.slice(2).forEach((num, index) => {
                         const material = model.materials[2 + index];
                         material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
-                        console.log(material.pbrMetallicRoughness);
                     });
                     descrip.forEach((e)=>{
                         e.style.display = 'block';
@@ -922,8 +944,8 @@
                     });
                 });
             });
-
             if (selectedValue !== "0"){
+                resetRotation();
                 isRotating = true;
                 rotateModel();
                 descrip.forEach((e)=>{
@@ -940,34 +962,13 @@
                 }
             });
 
-            console.log("Новое значение:", selectedValue);
 
         }
-        prvBtn.addEventListener('click', () => changeSelected(-1));
+        prvBtn.addEventListener('click', () => {
+            changeSelected(-1);
+        });
         nxtBtn.addEventListener('click', () => changeSelected(1));
         selectElement.addEventListener('change', () => changeSelect());
-        function resetMap(){
-            stopRotation();
-            rotationAngle = 0;
-            currentRotation = 0;
-            currentRotationDeg = 0;
-            console.log(currentRotation);
-            selectElement.value = 0;
-            modelViewerColor.setAttribute('camera-orbit', `90deg 65deg 2897m`);
-            modelViewerColor.setAttribute('field-of-view', '50deg');
-            modelViewerColor.setAttribute('camera-target', defaultTarget);
-            modelViewerColor.setAttribute('camera-controls',"");
-            model.materials.slice(2).forEach((num, index) => {
-                const material = model.materials[2 + index];
-                material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
-            });
-            descrip.forEach((e)=>{
-                e.style.display = 'block';
-            });
-            cards.forEach(card => {
-                card.style.display = 'none';
-            });
-        }
         document.querySelector('.reset-map').addEventListener('click',() =>resetMap());
     });
 
