@@ -826,19 +826,28 @@
                 });
         });
         function changeSelected(direction) {
-            // Получаем текущий индекс выбранного значения
+            rotationAngle = 0;
+            stopRotation();
+
             const currentIndex = options.indexOf(selectElement.selectedOptions[0]);
-
-            // Изменяем индекс с учетом направления (влево или вправо)
             selectedIndex = (currentIndex + direction + options.length) % options.length;
+            if (selectedIndex === 0 && direction === -1) {
+                selectedIndex = options.length - 1;
+            } else if (selectedIndex === options.length - 1 && direction === 1) {
+                selectedIndex = 0;
+            }
 
+            // Проверяем, что перешли на 0 и если да, то переключаем на следующий индекс (пропускаем 0)
+            if (selectedIndex === 0) {
+                selectedIndex = 1;
+            }
             // Устанавливаем новое выбранное значение
             selectElement.selectedIndex = selectedIndex;
             selectedValue = options[selectedIndex].value;
+            console.log(selectedIndex);
             changeSelect();
         }
        function changeSelect() {
-            isRotating = false;
             stopRotation();
             selectedValue = selectElement.value;
             console.log(selectedValue);
@@ -903,6 +912,7 @@
                     model.materials.slice(2).forEach((num, index) => {
                         const material = model.materials[2 + index];
                         material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
+                        console.log(material.pbrMetallicRoughness);
                     });
                     descrip.forEach((e)=>{
                         e.style.display = 'block';
@@ -936,8 +946,8 @@
         prvBtn.addEventListener('click', () => changeSelected(-1));
         nxtBtn.addEventListener('click', () => changeSelected(1));
         selectElement.addEventListener('change', () => changeSelect());
-        document.querySelector('.reset-map').addEventListener('click',(e) =>{
-            stopRotation()
+        function resetMap(){
+            stopRotation();
             rotationAngle = 0;
             currentRotation = 0;
             currentRotationDeg = 0;
@@ -957,7 +967,8 @@
             cards.forEach(card => {
                 card.style.display = 'none';
             });
-        });
+        }
+        document.querySelector('.reset-map').addEventListener('click',() =>resetMap());
     });
 
 </script>
