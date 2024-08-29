@@ -637,27 +637,27 @@
         <a class="prvBtn"><i class="bi bi-arrow-left-circle-fill"></i></a>
         <select class="form-select" aria-label="Default select">
             <option value="0" selected="">Выбирите корпус</option>
-            <option value="1">Учебный корпус №1</option>
-            <option value="2">Учебный корпус №2</option>
+            <option value="2">Учебный корпус №1</option>
+            <option value="13">Учебный корпус №2</option>
             <option value="3">Учебный корпус №3</option>
-            <option value="4">Учебный корпус №4</option>
-            <option value="5">Учебный корпус №5</option>
-            <option value="6">Учебный корпус №6</option>
+            <option value="21">Учебный корпус №4</option>
+            <option value="6">Учебный корпус №5</option>
+            <option value="14">Учебный корпус №6</option>
             <option value="7">Учебный корпус №7</option>
-            <option value="8">Учебный корпус №8</option>
-            <option value="9">Учебный корпус №9</option>
-            <option value="10">Учебный корпус №10</option>
-            <option value="10">Учебный корпус №10</option>
-            <option value="11">Учебный корпус №11</option>
-            <option value="12">Учебный корпус №12</option>
-            <option value="13">Учебный корпус №13</option>
-            <option value="15">Учебный корпус №15</option>
-            <option value="17">Учебный корпус №17</option>
-            <option value="18">Учебный корпус №18</option>
-            <option value="19">Библиотека (верхняя)</option>
+            <option value="17">Учебный корпус №8</option>
+            <option value="8">Учебный корпус №9</option>
+            <option value="22">Учебный корпус №10</option>
+            <option value="10">Учебный корпус №11</option>
+            <option value="15">Учебный корпус №12</option>
+            <option value="18">Учебный корпус №13</option>
+            <option value="11">Учебный корпус №15</option>
+            <option value="12">Учебный корпус №17</option>
+            <option value="23">Учебный корпус №18</option>
+            <option value="9">Спортивный комплекс</option>
+            <option value="5">Библиотека (верхняя)</option>
             <option value="20">Библиотека (нижняя)</option>
-            <option value="21">ЦКИД</option>
-            <option value="22">Столовая</option>
+            <option value="4">ЦКИД</option>
+            <option value="19">Столовая</option>
         </select>
         <div>
             <button class="reset-map">
@@ -699,21 +699,49 @@
         isRotating = false;
     }
     modelViewerColor.addEventListener('load', () => {
+        let numberCorp = 0;
+        let targetCoords = 0;
+        const selectElement = document.querySelector('.select-korp .form-select'); // Выбираем элемент select
+        const prvBtn = document.querySelector('.prvBtn');
+        const nxtBtn = document.querySelector('.nxtBtn');
+
+        const options = Array.from(selectElement.options);
+        let selectedIndex = 0; // Начальный индекс (первый элемент)
+
+
+        const values = [];
+// Перебираем все элементы option внутри select
+        for (const option of selectElement.options) {
+            // Добавляем значение атрибута value в массив
+            values.push(option.value);
+        }
+        console.log(values); // Выводим массив значений в консоль
+
+        // Получаем начальное значение выбранного элемента
+        let selectedValue = selectElement.value;
+
+        // Выводим начальное значение в консоль
+        console.log("Начальное значение:", selectedValue);
+
+
         const buttons = document.querySelectorAll('model-viewer.uppermap button.Hotspot');
         const crosses = document.querySelectorAll('.card .close');
+        let descrip = document.querySelectorAll('model-viewer.uppermap button.Hotspot');
+        let selectBtn = document.querySelector('.select-korp');
+        let resetBtn = document.querySelector('.reset-map');
+        let cards = document.querySelectorAll('.card');
+        const defaulColor = '#E7E7E7';
+        const colorString = '#820000';
+        const model = modelViewerColor.model;
         buttons.forEach(button => {
             button.addEventListener('click', (event) => {
-                    let descrip = document.querySelectorAll('model-viewer.uppermap button.Hotspot');
-                    let selectBtn = document.querySelector('.select-korp');
-                    let resetBtn = document.querySelector('.reset-map');
-                    let cards = document.querySelectorAll('.card');
-                    const defaulColor = '#E7E7E7';
-                    const colorString = '#820000';
-                    const numberCorp = button.dataset.number;
-                    const targetCoords = button.dataset.position;
-                const model = modelViewerColor.model;
+
+                    numberCorp = button.dataset.number;
+                    targetCoords = button.dataset.position;
+
                 model.materials.slice(2).forEach((num, index) => {
                     if (index == numberCorp) {
+                        selectElement.value = numberCorp;
                         const material = model.materials[numberCorp];
                         material.pbrMetallicRoughness.setBaseColorFactor(colorString);
                         modelViewerColor.setAttribute('camera-target', targetCoords);
@@ -738,7 +766,6 @@
 
 // Получение материала с индексом 1 (считая с нуля)
                 if  (numberCorp == 17 || numberCorp == 18 || numberCorp == 19 || numberCorp == 20 || numberCorp == 21 || numberCorp == 22 || numberCorp == 23) {
-                    console.log(numberCorp);
                     modelViewerColor.setAttribute('camera-target', targetCoords);
                     modelViewerColor.setAttribute('camera-orbit', `${currentRotationDeg}deg 63deg 1000m`);
                     modelViewerColor.setAttribute('field-of-view', '10deg');
@@ -759,6 +786,7 @@
 
                 crosses.forEach(event =>{
                     event.addEventListener('click', (e) => {
+                        selectElement.value = 0;
                         selectBtn.style.display = 'flex';
                         stopRotation()
                         modelViewerColor.setAttribute('camera-orbit', `${currentRotationDeg}deg 65deg 2897m`);
@@ -795,32 +823,143 @@
                             event.stopPropagation();
                         }
                     });
-                    document.querySelector('.reset-map').addEventListener('click',(e) =>{
-                        stopRotation()
-                        rotationAngle = 0;
-                        currentRotation = 0;
-                        currentRotationDeg = 0;
-                        console.log(currentRotation);
-                        modelViewerColor.setAttribute('camera-orbit', `90deg 65deg 2897m`);
-                        modelViewerColor.setAttribute('field-of-view', '50deg');
-                        modelViewerColor.setAttribute('camera-target', defaultTarget);
-                        modelViewerColor.setAttribute('camera-controls',"");
-                        model.materials.slice(2).forEach((num, index) => {
-                            const material = model.materials[2 + index];
-                            material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
-                        });
-                        descrip.forEach((e)=>{
-                            e.style.display = 'block';
-                        });
-                        cards.forEach(card => {
-                            card.style.display = 'none';
-                        });
-                    });
+                });
+        });
+        function changeSelected(direction) {
+            // Получаем текущий индекс выбранного значения
+            const currentIndex = options.indexOf(selectElement.selectedOptions[0]);
 
-// Получение объекта модели
+            // Изменяем индекс с учетом направления (влево или вправо)
+            selectedIndex = (currentIndex + direction + options.length) % options.length;
+
+            // Устанавливаем новое выбранное значение
+            selectElement.selectedIndex = selectedIndex;
+            selectedValue = options[selectedIndex].value;
+            changeSelect();
+        }
+       function changeSelect() {
+            isRotating = false;
+            stopRotation();
+            selectedValue = selectElement.value;
+            console.log(selectedValue);
+            buttons.forEach(button =>{
+                if(selectedValue == button.dataset.number){
+                    numberCorp = button.dataset.number;
+                    targetCoords = button.dataset.position;
+                    console.log(numberCorp);
+                }
+            });
+            model.materials.slice(2).forEach((num, index) => {
+                if (selectedValue == numberCorp) {
+                    const material = model.materials[numberCorp];
+                    material.pbrMetallicRoughness.setBaseColorFactor(colorString);
+                    modelViewerColor.setAttribute('camera-target', targetCoords);
+                    modelViewerColor.setAttribute('camera-orbit', `${currentRotationDeg}deg 63deg 1000m`);
+                    modelViewerColor.setAttribute('field-of-view', '10deg');
+                    modelViewerColor.setAttribute('camera-controls', 'none');
+                    modelViewerColor.removeAttribute('camera-controls');
+                    cards.forEach(card => {
+                        if(numberCorp == card.dataset.number) {
+                            card.style.display ='flex';
+                            resetBtn.style.display = 'block';
+                        }
+                        else{
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+                const material = model.materials[2 + index];
+                material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
+            });
+
+            if  (numberCorp == 17 || numberCorp == 18 || numberCorp == 19 || numberCorp == 20 || numberCorp == 21 || numberCorp == 22 || numberCorp == 23) {
+                modelViewerColor.setAttribute('camera-target', targetCoords);
+                modelViewerColor.setAttribute('camera-orbit', `${currentRotationDeg}deg 63deg 1000m`);
+                modelViewerColor.setAttribute('field-of-view', '10deg');
+
+                cards.forEach(card => {
+                    if(numberCorp == card.dataset.number) {
+                        card.style.display ='flex';
+                    }
+                    else{
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+// Установка цвета материала
+            const material = model.materials[numberCorp];
+            material.pbrMetallicRoughness.setBaseColorFactor(colorString);
+
+            crosses.forEach(event =>{
+                event.addEventListener('click', (e) => {
+                    selectElement.value = 0;
+                    selectBtn.style.display = 'flex';
+                    stopRotation();
+                    modelViewerColor.setAttribute('camera-orbit', `${currentRotationDeg}deg 65deg 2897m`);
+                    modelViewerColor.setAttribute('field-of-view', '50deg');
+                    modelViewerColor.setAttribute('camera-target', targetCoords);
+                    modelViewerColor.setAttribute('camera-controls',"");
+                    model.materials.slice(2).forEach((num, index) => {
+                        const material = model.materials[2 + index];
+                        material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
+                    });
+                    descrip.forEach((e)=>{
+                        e.style.display = 'block';
+                    });
+                    cards.forEach(card => {
+                        card.style.display = 'none';
+                    });
                 });
             });
+
+            if (selectedValue !== "0"){
+                isRotating = true;
+                rotateModel();
+                descrip.forEach((e)=>{
+                    e.style.display = 'none';
+                });
+            }
+            modelViewerColor.addEventListener('click', event => {
+
+                if (isModelClickable) {
+
+                } else {
+
+                    event.stopPropagation();
+                }
+            });
+
+            console.log("Новое значение:", selectedValue);
+
+        }
+        prvBtn.addEventListener('click', () => changeSelected(-1));
+        nxtBtn.addEventListener('click', () => changeSelected(1));
+        selectElement.addEventListener('change', () => changeSelect());
+        document.querySelector('.reset-map').addEventListener('click',(e) =>{
+            stopRotation()
+            rotationAngle = 0;
+            currentRotation = 0;
+            currentRotationDeg = 0;
+            console.log(currentRotation);
+            selectElement.value = 0;
+            modelViewerColor.setAttribute('camera-orbit', `90deg 65deg 2897m`);
+            modelViewerColor.setAttribute('field-of-view', '50deg');
+            modelViewerColor.setAttribute('camera-target', defaultTarget);
+            modelViewerColor.setAttribute('camera-controls',"");
+            model.materials.slice(2).forEach((num, index) => {
+                const material = model.materials[2 + index];
+                material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
+            });
+            descrip.forEach((e)=>{
+                e.style.display = 'block';
+            });
+            cards.forEach(card => {
+                card.style.display = 'none';
+            });
+        });
     });
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
