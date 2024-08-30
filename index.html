@@ -187,6 +187,31 @@
         -ms-user-select: none; /* Internet Explorer/Edge */
         user-select: none; /* Standard */
     }
+    @media screen and (max-width: 560px){
+        .card{
+            top: 1rem;
+            left: 1rem;
+        }
+    }
+    @media screen and (max-width: 400px){
+        .prvBtn,.nxtBtn{
+            display: none;
+        }
+    }
+    @media screen and (max-width: 355px){
+        .card{
+            max-width: 300px;
+        }
+        .card img{
+            width: 250px !important;
+        }
+    }
+    @media screen and (max-width: 560px){
+        .card{
+            top: 1rem;
+            left: 0.5rem;
+        }
+    }
 </style>
 <!--1813m-->
 <model-viewer
