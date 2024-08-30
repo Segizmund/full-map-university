@@ -191,13 +191,12 @@ modelViewerColor.addEventListener('load', () => {
     function changeSelected(direction) {
         const currentIndex = options.indexOf(selectElement.selectedOptions[0]);
         selectedIndex = (currentIndex + direction + options.length) % options.length;
+        // Установка индекса на последний элемент только при сдвиге влево
         if (selectedIndex === 0 && direction === -1) {
             selectedIndex = options.length - 1;
-        } else if (selectedIndex === options.length - 1 && direction === 1) {
-            selectedIndex = 0;
         }
 
-        // Проверяем, что перешли на 0 и если да, то переключаем на следующий индекс (пропускаем 0)
+// Проверяем, что перешли на 0 и если да, то переключаем на следующий индекс (пропускаем 0)
         if (selectedIndex === 0) {
             selectedIndex = 1;
         }
@@ -238,6 +237,11 @@ modelViewerColor.addEventListener('load', () => {
             const material = model.materials[2 + index];
             material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
         });
+
+        if (numberCorp == 2){
+            const material = model.materials[24];
+            material.pbrMetallicRoughness.setBaseColorFactor(colorString);
+        }
 
         if  (numberCorp == 17 || numberCorp == 18 || numberCorp == 19 || numberCorp == 20 || numberCorp == 21 || numberCorp == 22 || numberCorp == 23) {
             modelViewerColor.setAttribute('camera-target', targetCoords);
