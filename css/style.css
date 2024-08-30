@@ -115,8 +115,9 @@ model-viewer {
 }
 .card img{
     opacity: 1;
-    max-width: 347px;
+    max-width: 270px;
     max-height: 180px;
+    width: 100%;
     object-fit: contain;
 }
 .HotspotAnnotation h3{
