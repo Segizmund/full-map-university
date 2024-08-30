@@ -309,4 +309,10 @@ modelViewerColor.addEventListener('load', () => {
     nxtBtn.addEventListener('click', () => changeSelected(1));
     selectElement.addEventListener('change', () => changeSelect());
     document.querySelector('.reset-map').addEventListener('click',() =>resetMap());
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            resetMap();
+        }
+    });
+
 });
