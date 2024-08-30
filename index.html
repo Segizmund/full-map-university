@@ -791,6 +791,11 @@
                     material.pbrMetallicRoughness.setBaseColorFactor(defaulColor);
                 });
 
+                if(numberCorp == 2){
+                    const material = model.materials[24];
+                    material.pbrMetallicRoughness.setBaseColorFactor(colorString);
+                }
+
 
 // Получение материала с индексом 1 (считая с нуля)
                 if  (numberCorp == 17 || numberCorp == 18 || numberCorp == 19 || numberCorp == 20 || numberCorp == 21 || numberCorp == 22 || numberCorp == 23) {
